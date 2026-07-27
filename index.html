@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ==========================================================================
+     Federated HPC @ HiPC 2026 — single-page workshop site
+     Everything (styles + scripts) is inline so this file can be dropped into a
+     GitHub repo and served by GitHub Pages with no build step.
+     To edit content, search for the SECTION comments below.
+     ========================================================================== -->
+
+<title>Federated HPC 2026 · Privacy-Preserving & Collaborative Scientific Computing @ HiPC</title>
+<meta name="description" content="A half-day HiPC 2026 workshop on scalable, communication-efficient, and privacy-preserving federated learning for scientific computing on HPC systems." />
+
+<!-- Inline SVG favicon (keeps this a true single file) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230A1330'/%3E%3Cg fill='none' stroke='%2314BEC9' stroke-width='1.6'%3E%3Cline x1='16' y1='16' x2='16' y2='6'/%3E%3Cline x1='16' y1='16' x2='24.5' y2='11'/%3E%3Cline x1='16' y1='16' x2='24.5' y2='21'/%3E%3Cline x1='16' y1='16' x2='16' y2='26'/%3E%3Cline x1='16' y1='16' x2='7.5' y2='21'/%3E%3Cline x1='16' y1='16' x2='7.5' y2='11'/%3E%3C/g%3E%3Cg fill='%2314BEC9'%3E%3Ccircle cx='16' cy='6' r='2.2'/%3E%3Ccircle cx='24.5' cy='11' r='2.2'/%3E%3Ccircle cx='24.5' cy='21' r='2.2'/%3E%3Ccircle cx='16' cy='26' r='2.2'/%3E%3Ccircle cx='7.5' cy='21' r='2.2'/%3E%3Ccircle cx='7.5' cy='11' r='2.2'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%23F3F5FB'/%3E%3C/svg%3E" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================ TOKENS ============================ */
+:root{
+  --ink:#0A1330;            /* deep compute navy — hero + footer */
+  --ink-soft:#131E45;       /* dark cards / node fills */
+  --ink-line:rgba(255,255,255,.10);
+  --ink-line-strong:rgba(255,255,255,.18);
+
+  --paper:#F3F5FB;          /* cool page background */
+  --surface:#FFFFFF;
+  --surface-2:#FAFBFE;
+  --line:#E3E8F2;
+  --line-strong:#D3DAEA;
+
+  --text:#0D1730;           /* primary text on light */
+  --muted:#59637F;          /* secondary text on light */
+  --muted-dark:#9AA6CB;     /* secondary text on dark */
+  --faint-dark:#6C79A6;
+
+  --signal:#14BEC9;         /* teal accent (on dark) */
+  --signal-2:#37D3DD;       /* brighter teal (links on dark) */
+  --signal-ink:#0A6E75;     /* accessible teal for text/links on light */
+  --signal-soft:rgba(20,190,201,.12);
+  --signal-line:rgba(20,190,201,.32);
+
+  --amber:#F2A63B;          /* used once, to flag the firm deadline */
+  --amber-soft:rgba(242,166,59,.14);
+
+  --radius:16px;
+  --radius-sm:11px;
+  --container:1140px;
+  --pad-x:clamp(1.25rem, 4vw, 2.5rem);
+  --section-y:clamp(4rem, 8.5vw, 7rem);
+
+  --shadow-sm:0 1px 2px rgba(13,23,48,.05), 0 4px 14px rgba(13,23,48,.05);
+  --shadow-md:0 4px 10px rgba(13,23,48,.06), 0 18px 44px rgba(13,23,48,.09);
+
+  --font-display:"Space Grotesk", system-ui, sans-serif;
+  --font-body:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* ============================ BASE ============================ */
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%;}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  color:var(--text);
+  background:var(--paper);
+  line-height:1.62;
+  font-size:clamp(1rem, 0.97rem + 0.15vw, 1.075rem);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;line-height:1.1;letter-spacing:-0.01em;margin:0;}
+p{margin:0;}
+a{color:var(--signal-ink);text-decoration:none;}
+a:hover{text-decoration:underline;text-underline-offset:3px;}
+img{max-width:100%;display:block;}
+ul{margin:0;padding:0;list-style:none;}
+::selection{background:var(--signal);color:var(--ink);}
+
+.container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad-x);}
+.section{padding-block:var(--section-y);}
+
+/* Eyebrow / structural label */
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:.74rem;
+  font-weight:500;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--signal-ink);
+  display:inline-flex;
+  align-items:center;
+  gap:.6rem;
+}
+.eyebrow::before{
+  content:"";width:26px;height:1px;background:var(--signal-line);display:inline-block;
+}
+.section-head{max-width:56ch;margin-bottom:clamp(2rem,4vw,3rem);}
+.section-head h2{
+  font-size:clamp(1.7rem, 1.1rem + 2.4vw, 2.65rem);
+  margin-top:.9rem;
+  color:var(--text);
+}
+.section-head p{color:var(--muted);margin-top:1rem;font-size:1.05rem;max-width:62ch;}
+
+/* Buttons */
+.btn{
+  --bg:var(--ink);--fg:#fff;--bd:var(--ink);
+  display:inline-flex;align-items:center;gap:.55rem;
+  font-family:var(--font-body);font-weight:600;font-size:.95rem;
+  padding:.78rem 1.35rem;border-radius:999px;
+  background:var(--bg);color:var(--fg);border:1.5px solid var(--bd);
+  cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+  text-decoration:none;white-space:nowrap;
+}
+.btn:hover{text-decoration:none;transform:translateY(-2px);box-shadow:0 10px 22px rgba(10,19,48,.18);}
+.btn .arrow{transition:transform .18s ease;}
+.btn:hover .arrow{transform:translate(2px,-2px);}
+.btn--primary{--bg:var(--signal);--fg:#06222A;--bd:var(--signal);}
+.btn--primary:hover{box-shadow:0 10px 24px rgba(20,190,201,.4);}
+.btn--ghost{--bg:transparent;--fg:#fff;--bd:var(--ink-line-strong);}
+.btn--ghost:hover{--bd:var(--signal);box-shadow:none;color:var(--signal-2);}
+.btn--light{--bg:var(--surface);--fg:var(--text);--bd:var(--line-strong);}
+.btn--light:hover{--bd:var(--signal-ink);}
+
+/* =========================================================================
+   NAVBAR
+   ========================================================================= */
+.nav{
+  position:sticky;top:0;z-index:60;
+  background:rgba(243,245,251,.82);
+  backdrop-filter:saturate(150%) blur(12px);
+  -webkit-backdrop-filter:saturate(150%) blur(12px);
+  border-bottom:1px solid transparent;
+  transition:border-color .2s ease, background .2s ease;
+}
+.nav.scrolled{border-bottom-color:var(--line);background:rgba(243,245,251,.92);}
+.nav__inner{display:flex;align-items:center;justify-content:space-between;height:66px;gap:1rem;}
+.brand{display:flex;align-items:center;gap:.62rem;font-family:var(--font-display);font-weight:700;color:var(--text);letter-spacing:-.02em;font-size:1.06rem;}
+.brand:hover{text-decoration:none;}
+.brand__mark{width:30px;height:30px;flex:none;}
+.brand small{display:block;font-family:var(--font-mono);font-weight:500;font-size:.62rem;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;line-height:1;margin-top:2px;}
+.nav__links{display:flex;align-items:center;gap:.35rem;}
+.nav__links a{
+  font-size:.9rem;font-weight:500;color:var(--muted);padding:.45rem .7rem;border-radius:8px;
+  transition:color .15s ease, background .15s ease;
+}
+.nav__links a:hover{color:var(--text);background:rgba(19,30,69,.05);text-decoration:none;}
+.nav__links a.active{color:var(--text);}
+.nav__cta{margin-left:.4rem;}
+.nav__cta .btn{padding:.55rem 1.05rem;font-size:.88rem;}
+.nav__toggle{display:none;background:none;border:1px solid var(--line-strong);border-radius:9px;width:42px;height:40px;cursor:pointer;color:var(--text);align-items:center;justify-content:center;}
+.nav__toggle svg{width:20px;height:20px;}
+
+@media (max-width:860px){
+  .nav__links{
+    position:absolute;top:66px;left:0;right:0;
+    flex-direction:column;align-items:stretch;gap:0;
+    background:var(--surface);border-bottom:1px solid var(--line);
+    padding:.5rem var(--pad-x) 1rem;
+    box-shadow:var(--shadow-md);
+    display:none;
+  }
+  .nav__links.open{display:flex;}
+  .nav__links a{padding:.7rem .4rem;border-bottom:1px solid var(--line);border-radius:0;}
+  .nav__links .nav__cta{margin:.7rem 0 0;}
+  .nav__cta .btn{width:100%;justify-content:center;}
+  .nav__toggle{display:inline-flex;}
+}
+
+/* =========================================================================
+   HERO
+   ========================================================================= */
+.hero{
+  position:relative;overflow:hidden;color:#EAF0FF;
+  background:
+    radial-gradient(120% 120% at 85% 8%, #16265C 0%, rgba(22,38,92,0) 46%),
+    radial-gradient(90% 90% at 8% 92%, #0D3B49 0%, rgba(13,59,73,0) 42%),
+    var(--ink);
+}
+.hero::before{ /* faint compute-grid dot matrix */
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.05) 1px, transparent 1.4px);
+  background-size:26px 26px;
+  mask-image:linear-gradient(to bottom, black, transparent 88%);
+  -webkit-mask-image:linear-gradient(to bottom, black, transparent 88%);
+  pointer-events:none;
+}
+.hero__grid{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);
+  gap:clamp(2rem,5vw,4rem);align-items:center;
+  padding-block:clamp(3.4rem,7vw,5.6rem);
+}
+.hero__eyebrow{color:var(--signal-2);}
+.hero__eyebrow::before{background:var(--signal-line);}
+.hero h1{
+  font-size:clamp(2.7rem, 1.6rem + 5.4vw, 5rem);
+  font-weight:700;letter-spacing:-.03em;color:#fff;margin-top:1.1rem;line-height:.98;
+}
+.hero h1 .accent{
+  color:transparent;background:linear-gradient(92deg,#5FE3EC,#14BEC9 60%);-webkit-background-clip:text;background-clip:text;
+}
+.hero__tagline{
+  font-family:var(--font-display);font-weight:500;
+  font-size:clamp(1.05rem, .9rem + .8vw, 1.5rem);
+  color:#C7D2F0;margin-top:1.1rem;line-height:1.28;max-width:22ch;letter-spacing:-.01em;
+}
+.hero__lead{color:var(--muted-dark);margin-top:1.5rem;max-width:52ch;font-size:1.03rem;}
+.hero__cta{display:flex;flex-wrap:wrap;gap:.85rem;margin-top:2rem;}
+.hero__meta{
+  display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin-top:2.2rem;
+  font-family:var(--font-mono);font-size:.78rem;color:var(--faint-dark);letter-spacing:.02em;
+  border-top:1px solid var(--ink-line);padding-top:1.3rem;
+}
+.hero__meta span{display:inline-flex;align-items:center;gap:.5rem;}
+.hero__meta .dot{width:6px;height:6px;border-radius:50%;background:var(--signal);flex:none;}
+
+/* Federation network figure (the signature element) */
+.hero__figure{position:relative;justify-self:center;width:100%;max-width:440px;aspect-ratio:1;}
+.netfig{width:100%;height:100%;overflow:visible;}
+.netfig .grid-ring{fill:none;stroke:var(--ink-line);stroke-width:1;}
+.netfig .link{fill:none;stroke:rgba(120,140,200,.35);stroke-width:1.4;}
+.netfig .link-flow{fill:none;stroke:var(--signal);stroke-width:1.6;stroke-dasharray:2 12;stroke-linecap:round;opacity:.9;animation:flow 2.4s linear infinite;}
+.netfig .node-outer{fill:var(--ink-soft);stroke:var(--signal-line);stroke-width:1.4;}
+.netfig .node-glyph{fill:none;stroke:var(--signal-2);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.netfig .node-pulse{fill:none;stroke:var(--signal);stroke-width:1.4;opacity:0;transform-box:fill-box;transform-origin:center;animation:nodepulse 3.2s ease-out infinite;}
+.netfig .hub-ring{fill:none;stroke:var(--signal);stroke-width:1.5;opacity:0;transform-box:fill-box;transform-origin:center;animation:hubring 3s ease-out infinite;}
+.netfig .hub{fill:url(#hubgrad);stroke:var(--signal-2);stroke-width:1.6;}
+.netfig .hub-core{fill:#EAF6FF;}
+.netfig .hub-label{font-family:var(--font-mono);font-size:9px;fill:#BFEFF3;letter-spacing:.08em;text-anchor:middle;}
+.netfig .tag{font-family:var(--font-mono);font-size:8.4px;fill:var(--faint-dark);letter-spacing:.04em;text-anchor:middle;}
+.pk{fill:var(--signal-2);r:3;filter:drop-shadow(0 0 4px rgba(55,211,221,.8));opacity:0;}
+.pk1{offset-path:path("M240 66 L240 240");animation:packet 2.4s linear infinite;}
+.pk2{offset-path:path("M396 150 L240 240");animation:packet 2.4s linear .8s infinite;}
+.pk3{offset-path:path("M396 330 L240 240");animation:packet 2.4s linear 1.9s infinite;}
+.pk4{offset-path:path("M240 414 L240 240");animation:packet 2.4s linear .4s infinite;}
+.pk5{offset-path:path("M84 330 L240 240");animation:packet 2.4s linear 1.4s infinite;}
+.pk6{offset-path:path("M84 150 L240 240");animation:packet 2.4s linear 2.1s infinite;}
+
+@keyframes flow{to{stroke-dashoffset:-140;}}
+@keyframes packet{0%{offset-distance:0%;opacity:0;}12%{opacity:1;}80%{opacity:1;}100%{offset-distance:100%;opacity:0;}}
+@keyframes nodepulse{0%{opacity:.7;transform:scale(1);}70%,100%{opacity:0;transform:scale(2.1);}}
+@keyframes hubring{0%{opacity:.55;transform:scale(1);}75%,100%{opacity:0;transform:scale(2.3);}}
+
+@media (max-width:840px){
+  .hero__grid{grid-template-columns:1fr;}
+  .hero__figure{max-width:340px;margin-top:.5rem;order:-1;}
+  .hero__tagline{max-width:32ch;}
+}
+
+/* =========================================================================
+   KEY DATES
+   ========================================================================= */
+.dates{background:var(--ink);color:#E6ECFB;position:relative;}
+.dates .eyebrow{color:var(--signal-2);}
+.dates .eyebrow::before{background:var(--signal-line);}
+.dates__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:2.6rem;}
+.dates__head h2{font-size:clamp(1.7rem,1.1rem + 2.4vw,2.5rem);color:#fff;margin-top:.85rem;}
+.dates__note{font-family:var(--font-mono);font-size:.76rem;color:var(--faint-dark);letter-spacing:.03em;}
+.timeline{position:relative;display:grid;gap:0;}
+.tl-item{
+  display:grid;grid-template-columns:minmax(150px,190px) 1fr;gap:clamp(1rem,3vw,2.5rem);
+  padding:1.15rem 0;border-top:1px solid var(--ink-line);align-items:baseline;
+  position:relative;
+}
+.tl-item:last-child{border-bottom:1px solid var(--ink-line);}
+.tl-date{font-family:var(--font-mono);font-size:1rem;font-weight:500;color:var(--signal-2);letter-spacing:.01em;display:flex;align-items:center;gap:.7rem;}
+.tl-date .marker{width:9px;height:9px;border-radius:50%;background:var(--signal);flex:none;box-shadow:0 0 0 4px rgba(20,190,201,.16);}
+.tl-body{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .8rem;}
+.tl-title{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:#fff;letter-spacing:-.01em;}
+.tl-sub{font-size:.92rem;color:var(--muted-dark);}
+.flag{
+  font-family:var(--font-mono);font-size:.66rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--amber);background:var(--amber-soft);border:1px solid rgba(242,166,59,.35);
+  padding:.16rem .5rem;border-radius:6px;white-space:nowrap;
+}
+@media (max-width:620px){
+  .tl-item{grid-template-columns:1fr;gap:.35rem;}
+  .tl-date .marker{display:none;}
+}
+
+/* =========================================================================
+   ABOUT
+   ========================================================================= */
+.about__grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(2rem,5vw,4.5rem);align-items:start;}
+.about__prose p + p{margin-top:1.1rem;}
+.about__prose .lede{font-size:1.18rem;color:var(--text);font-family:var(--font-display);font-weight:500;line-height:1.4;letter-spacing:-.01em;}
+.about__prose strong{color:var(--text);font-weight:600;}
+.align-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.6rem 1.7rem;box-shadow:var(--shadow-sm);position:sticky;top:88px;}
+.align-card h3{font-size:.82rem;font-family:var(--font-mono);font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--signal-ink);}
+.align-card ul{margin-top:1.1rem;display:grid;gap:.9rem;}
+.align-card li{display:grid;grid-template-columns:auto 1fr;gap:.7rem;font-size:.95rem;color:var(--muted);line-height:1.45;align-items:start;}
+.align-card li b{color:var(--text);font-weight:600;}
+.tick{width:19px;height:19px;flex:none;margin-top:.15rem;color:var(--signal-ink);}
+@media (max-width:840px){.about__grid{grid-template-columns:1fr;}.align-card{position:static;}}
+
+/* =========================================================================
+   TOPICS
+   ========================================================================= */
+.topics{background:var(--surface-2);border-block:1px solid var(--line);}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.1rem;}
+.topic{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.5rem 1.55rem;position:relative;overflow:hidden;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.topic::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--signal);transform:scaleY(0);transform-origin:top;transition:transform .25s ease;}
+.topic:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--line-strong);}
+.topic:hover::before{transform:scaleY(1);}
+.topic__tag{font-family:var(--font-mono);font-size:.68rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--signal-ink);}
+.topic h3{font-size:1.16rem;margin-top:.55rem;color:var(--text);letter-spacing:-.01em;line-height:1.2;}
+.topic ul{margin-top:1rem;display:grid;gap:.5rem;}
+.topic li{position:relative;padding-left:1.05rem;font-size:.92rem;color:var(--muted);line-height:1.45;}
+.topic li::before{content:"";position:absolute;left:0;top:.6em;width:5px;height:5px;border-radius:1px;background:var(--signal-line);transform:rotate(45deg);}
+
+/* =========================================================================
+   SUBMISSION
+   ========================================================================= */
+.submit__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(1.5rem,4vw,3rem);align-items:start;}
+.spec-list{display:grid;gap:1.15rem;}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start;}
+.spec__icon{width:42px;height:42px;flex:none;border-radius:11px;background:var(--signal-soft);color:var(--signal-ink);display:grid;place-items:center;}
+.spec__icon svg{width:21px;height:21px;}
+.spec h3{font-size:1.05rem;color:var(--text);margin-bottom:.2rem;}
+.spec p{font-size:.95rem;color:var(--muted);}
+.submit-cta{
+  background:var(--ink);color:#E9EEFB;border-radius:var(--radius);padding:1.9rem;position:relative;overflow:hidden;
+}
+.submit-cta::after{content:"";position:absolute;right:-40px;bottom:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,var(--signal-soft),transparent 70%);}
+.submit-cta .eyebrow{color:var(--signal-2);position:relative;}
+.submit-cta .eyebrow::before{background:var(--signal-line);}
+.submit-cta h3{color:#fff;font-size:1.35rem;margin-top:.75rem;position:relative;}
+.submit-cta p{color:var(--muted-dark);margin-top:.7rem;font-size:.96rem;position:relative;}
+.submit-cta .btn{margin-top:1.4rem;position:relative;}
+.submit-cta .fineprint{font-family:var(--font-mono);font-size:.72rem;color:var(--faint-dark);margin-top:1.1rem;position:relative;letter-spacing:.02em;}
+@media (max-width:780px){.submit__grid{grid-template-columns:1fr;}}
+
+/* =========================================================================
+   SPEAKERS
+   ========================================================================= */
+.speakers{background:var(--surface-2);border-block:1px solid var(--line);}
+.speaker-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.1rem;max-width:760px;}
+.speaker{display:flex;gap:1.1rem;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.35rem 1.5rem;box-shadow:var(--shadow-sm);}
+.avatar{width:56px;height:56px;flex:none;border-radius:14px;background:linear-gradient(140deg,#16265C,#0D3B49);color:#CFF6F9;display:grid;place-items:center;font-family:var(--font-display);font-weight:600;font-size:1.15rem;letter-spacing:.02em;}
+.speaker__name{font-family:var(--font-display);font-weight:600;font-size:1.08rem;color:var(--text);}
+.speaker__role{font-size:.9rem;color:var(--muted);margin-top:.15rem;}
+.speaker__org{font-family:var(--font-mono);font-size:.74rem;color:var(--signal-ink);margin-top:.35rem;letter-spacing:.02em;}
+
+/* =========================================================================
+   ORGANIZERS
+   ========================================================================= */
+.org-lab{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;
+  background:var(--signal-soft);border:1px solid var(--signal-line);border-radius:999px;
+  padding:.6rem 1.2rem;font-size:.9rem;color:var(--signal-ink);font-weight:500;margin-bottom:2.4rem;width:fit-content;
+}
+.org-lab svg{width:18px;height:18px;flex:none;}
+.org-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;}
+.org{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.6rem;box-shadow:var(--shadow-sm);transition:transform .2s ease, box-shadow .2s ease;}
+.org:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+.org__top{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;}
+.org__name{font-family:var(--font-display);font-weight:600;font-size:1.1rem;color:var(--text);line-height:1.15;}
+.org__aff{font-family:var(--font-mono);font-size:.73rem;color:var(--signal-ink);margin-top:.3rem;letter-spacing:.01em;line-height:1.4;}
+.org__bio{font-size:.92rem;color:var(--muted);line-height:1.55;}
+.org__bio strong{color:var(--text);font-weight:600;}
+
+/* =========================================================================
+   PROGRAM COMMITTEE
+   ========================================================================= */
+.pc{background:var(--ink);color:#E6ECFB;}
+.pc .eyebrow{color:var(--signal-2);}
+.pc .eyebrow::before{background:var(--signal-line);}
+.pc .section-head h2{color:#fff;}
+.pc .section-head p{color:var(--muted-dark);}
+.pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:.55rem;}
+.pc-item{
+  display:grid;grid-template-columns:auto 1fr;gap:.85rem;align-items:baseline;
+  padding:.85rem 1rem;border:1px solid var(--ink-line);border-radius:var(--radius-sm);
+  background:rgba(255,255,255,.02);transition:border-color .18s ease, background .18s ease;
+}
+.pc-item:hover{border-color:var(--signal-line);background:rgba(20,190,201,.06);}
+.pc-num{font-family:var(--font-mono);font-size:.72rem;color:var(--signal);font-weight:500;}
+.pc-name{font-weight:600;font-size:.96rem;color:#fff;line-height:1.2;}
+.pc-org{font-size:.82rem;color:var(--muted-dark);margin-top:.1rem;}
+
+/* =========================================================================
+   FOOTER
+   ========================================================================= */
+.footer{background:#070E24;color:var(--muted-dark);padding-block:clamp(3rem,6vw,4.5rem) 2rem;border-top:1px solid var(--ink-line);}
+.footer__top{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(2rem,5vw,4rem);padding-bottom:2.4rem;border-bottom:1px solid var(--ink-line);}
+.footer__brand{display:flex;align-items:center;gap:.65rem;font-family:var(--font-display);font-weight:700;color:#fff;font-size:1.15rem;letter-spacing:-.02em;}
+.footer__brand .brand__mark{width:32px;height:32px;}
+.footer__desc{margin-top:1rem;font-size:.94rem;max-width:44ch;line-height:1.6;}
+.footer__col h4{font-family:var(--font-mono);font-size:.72rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--faint-dark);margin-bottom:1rem;}
+.footer__col ul{display:grid;gap:.6rem;}
+.footer__col a{color:var(--muted-dark);font-size:.94rem;}
+.footer__col a:hover{color:var(--signal-2);}
+.footer__contact{font-size:.94rem;line-height:1.6;}
+.footer__contact a{color:var(--signal-2);}
+.footer__bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.8rem;padding-top:1.8rem;font-family:var(--font-mono);font-size:.76rem;color:var(--faint-dark);letter-spacing:.02em;}
+@media (max-width:720px){.footer__top{grid-template-columns:1fr;gap:2.2rem;}}
+
+/* =========================================================================
+   SCROLL REVEAL + REDUCED MOTION
+   ========================================================================= */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
+.reveal.in{opacity:1;transform:none;}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  .reveal{opacity:1;transform:none;}
+}
+
+/* Focus visibility for keyboard users */
+a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2.5px solid var(--signal);outline-offset:3px;border-radius:6px;}
+.hero a:focus-visible,.dates a:focus-visible,.pc a:focus-visible{outline-color:var(--signal-2);}
+</style>
+</head>
+
+<body>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="#top" class="brand" aria-label="Federated HPC 2026 home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#0A1330"/>
+        <g fill="none" stroke="#14BEC9" stroke-width="1.6">
+          <line x1="16" y1="16" x2="16" y2="6"/><line x1="16" y1="16" x2="24.5" y2="11"/>
+          <line x1="16" y1="16" x2="24.5" y2="21"/><line x1="16" y1="16" x2="16" y2="26"/>
+          <line x1="16" y1="16" x2="7.5" y2="21"/><line x1="16" y1="16" x2="7.5" y2="11"/>
+        </g>
+        <g fill="#14BEC9">
+          <circle cx="16" cy="6" r="2.2"/><circle cx="24.5" cy="11" r="2.2"/><circle cx="24.5" cy="21" r="2.2"/>
+          <circle cx="16" cy="26" r="2.2"/><circle cx="7.5" cy="21" r="2.2"/><circle cx="7.5" cy="11" r="2.2"/>
+        </g>
+        <circle cx="16" cy="16" r="3.4" fill="#F3F5FB"/>
+      </svg>
+      <span>Federated HPC<small>HiPC 2026 · Workshop</small></span>
+    </a>
+
+    <button class="nav__toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+
+    <nav class="nav__links" id="navLinks" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#dates">Dates</a>
+      <a href="#topics">Topics</a>
+      <a href="#submission">Submission</a>
+      <a href="#speakers">Speakers</a>
+      <a href="#organizers">Organizers</a>
+      <a href="#committee">Committee</a>
+      <span class="nav__cta"><a class="btn btn--primary" href="#submission">Call for papers</a></span>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <span class="eyebrow hero__eyebrow">HiPC 2026 · Half-Day Workshop</span>
+      <h1>Federated&nbsp;<span class="accent">HPC</span></h1>
+      <p class="hero__tagline">Privacy-Preserving &amp; Collaborative High-Performance Scientific Computing</p>
+      <p class="hero__lead">
+        Scientific discovery increasingly depends on AI over large, distributed datasets — yet privacy rules,
+        institutional policy, and the cost of moving data keep those datasets apart. This workshop brings
+        federated learning and HPC together: training shared models across institutions without moving raw data.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#submission">Call for papers <span class="arrow" aria-hidden="true">↗</span></a>
+        <a class="btn btn--ghost" href="#dates">Key dates</a>
+      </div>
+      <div class="hero__meta">
+        <span><span class="dot"></span>In conjunction with HiPC&nbsp;2026</span>
+        <span><span class="dot"></span>6-page IEEE proceedings</span>
+        <span><span class="dot"></span>WIP &amp; full papers welcome</span>
+      </div>
+    </div>
+
+    <!-- Signature element: federation network -->
+    <div class="hero__figure" aria-hidden="true">
+      <svg class="netfig" viewBox="0 0 480 480" role="img">
+        <defs>
+          <radialGradient id="hubgrad" cx="50%" cy="45%" r="60%">
+            <stop offset="0%" stop-color="#1C4A55"/><stop offset="100%" stop-color="#0C2030"/>
+          </radialGradient>
+        </defs>
+
+        <!-- ambient rings -->
+        <circle class="grid-ring" cx="240" cy="240" r="190"/>
+        <circle class="grid-ring" cx="240" cy="240" r="120" opacity=".6"/>
+
+        <!-- static links (outer -> hub) -->
+        <g class="link">
+          <path d="M240 66 L240 240"/><path d="M396 150 L240 240"/><path d="M396 330 L240 240"/>
+          <path d="M240 414 L240 240"/><path d="M84 330 L240 240"/><path d="M84 150 L240 240"/>
+        </g>
+        <!-- animated flow -->
+        <g class="link-flow">
+          <path d="M240 66 L240 240"/><path d="M396 150 L240 240"/><path d="M396 330 L240 240"/>
+          <path d="M240 414 L240 240"/><path d="M84 330 L240 240"/><path d="M84 150 L240 240"/>
+        </g>
+
+        <!-- packets travelling inward -->
+        <circle class="pk pk1" cx="0" cy="0"/><circle class="pk pk2" cx="0" cy="0"/>
+        <circle class="pk pk3" cx="0" cy="0"/><circle class="pk pk4" cx="0" cy="0"/>
+        <circle class="pk pk5" cx="0" cy="0"/><circle class="pk pk6" cx="0" cy="0"/>
+
+        <!-- outer institution nodes -->
+        <!-- top -->
+        <g><circle class="node-pulse" cx="240" cy="66" r="20" style="animation-delay:.2s"/><circle class="node-outer" cx="240" cy="66" r="20"/>
+          <g class="node-glyph" transform="translate(240 66)"><rect x="-7" y="-6" width="14" height="4.5" rx="1.2"/><rect x="-7" y="1.5" width="14" height="4.5" rx="1.2"/><circle cx="-4" cy="-3.7" r=".7" fill="#37D3DD" stroke="none"/><circle cx="-4" cy="3.8" r=".7" fill="#37D3DD" stroke="none"/></g></g>
+        <!-- top-right -->
+        <g><circle class="node-pulse" cx="396" cy="150" r="20" style="animation-delay:1s"/><circle class="node-outer" cx="396" cy="150" r="20"/>
+          <g class="node-glyph" transform="translate(396 150)"><path d="M-6 6 V-3 L0 -6 L6 -3 V6 Z"/><path d="M-2.5 6 V0.5 H2.5 V6"/></g></g>
+        <!-- bottom-right -->
+        <g><circle class="node-pulse" cx="396" cy="330" r="20" style="animation-delay:1.9s"/><circle class="node-outer" cx="396" cy="330" r="20"/>
+          <g class="node-glyph" transform="translate(396 330)"><rect x="-7" y="-6" width="14" height="4.5" rx="1.2"/><rect x="-7" y="1.5" width="14" height="4.5" rx="1.2"/><circle cx="-4" cy="-3.7" r=".7" fill="#37D3DD" stroke="none"/><circle cx="-4" cy="3.8" r=".7" fill="#37D3DD" stroke="none"/></g></g>
+        <!-- bottom -->
+        <g><circle class="node-pulse" cx="240" cy="414" r="20" style="animation-delay:.6s"/><circle class="node-outer" cx="240" cy="414" r="20"/>
+          <g class="node-glyph" transform="translate(240 414)"><path d="M-6 6 V-3 L0 -6 L6 -3 V6 Z"/><path d="M-2.5 6 V0.5 H2.5 V6"/></g></g>
+        <!-- bottom-left -->
+        <g><circle class="node-pulse" cx="84" cy="330" r="20" style="animation-delay:1.4s"/><circle class="node-outer" cx="84" cy="330" r="20"/>
+          <g class="node-glyph" transform="translate(84 330)"><rect x="-7" y="-6" width="14" height="4.5" rx="1.2"/><rect x="-7" y="1.5" width="14" height="4.5" rx="1.2"/><circle cx="-4" cy="-3.7" r=".7" fill="#37D3DD" stroke="none"/><circle cx="-4" cy="3.8" r=".7" fill="#37D3DD" stroke="none"/></g></g>
+        <!-- top-left -->
+        <g><circle class="node-pulse" cx="84" cy="150" r="20" style="animation-delay:2.1s"/><circle class="node-outer" cx="84" cy="150" r="20"/>
+          <g class="node-glyph" transform="translate(84 150)"><path d="M-6 6 V-3 L0 -6 L6 -3 V6 Z"/><path d="M-2.5 6 V0.5 H2.5 V6"/></g></g>
+
+        <!-- central hub: the global model -->
+        <circle class="hub-ring" cx="240" cy="240" r="34"/>
+        <circle class="hub" cx="240" cy="240" r="34"/>
+        <circle class="hub-core" cx="240" cy="240" r="6"/>
+        <text class="hub-label" x="240" y="290">GLOBAL MODEL</text>
+        <text class="tag" x="240" y="42">data stays local · only updates travel</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ KEY DATES ============================ -->
+<!-- EDIT DATES HERE -->
+<section class="section dates" id="dates">
+  <div class="container">
+    <div class="dates__head">
+      <div>
+        <span class="eyebrow">Timeline</span>
+        <h2>Key dates</h2>
+      </div>
+      <p class="dates__note">All dates 2026 · subject to change</p>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-date"><span class="marker"></span>Aug 2</div>
+        <div class="tl-body"><span class="tl-title">Website &amp; Call for Papers published</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date"><span class="marker"></span>Sep 1</div>
+        <div class="tl-body"><span class="tl-title">Submission site opens</span><span class="tl-sub">via Linklings · latest by</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date"><span class="marker"></span>Oct 9</div>
+        <div class="tl-body"><span class="tl-title">Full paper submissions due</span><span class="tl-sub">latest by</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date"><span class="marker"></span>Nov 6</div>
+        <div class="tl-body"><span class="tl-title">Author notifications</span><span class="tl-sub">latest by</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date"><span class="marker"></span>Nov 13</div>
+        <div class="tl-body"><span class="tl-title">Camera-ready version due</span><span class="flag">Firm deadline</span></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date"><span class="marker"></span>Nov 20</div>
+        <div class="tl-body"><span class="tl-title">Advance program published</span><span class="tl-sub">latest by</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ABOUT ============================ -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">About the workshop</span>
+      <h2>Federated learning, built for HPC</h2>
+    </div>
+
+    <div class="about__grid">
+      <div class="about__prose reveal">
+        <p class="lede">Federated Learning lets many organisations train a shared model together — without any of them handing over their raw data.</p>
+        <p style="margin-top:1.3rem;">To bring that capability to scientific workloads, FL has to be tightly integrated with High-Performance Computing: orchestrated across distributed clusters, aware of heterogeneous data and accelerators, and efficient in the communication it demands. This half-day workshop focuses on <strong>scalable, communication-efficient, and privacy-preserving distributed learning</strong> for science on HPC systems.</p>
+        <p>Through invited talks, peer-reviewed paper presentations, and short hands-on tutorials, participants gain both foundational grounding and practical exposure to privacy-preserving distributed frameworks. By convening researchers, practitioners, and system architects, the workshop aims to define a roadmap for <strong>secure, collaborative, and trustworthy scientific computing at exascale</strong>.</p>
+      </div>
+
+      <aside class="align-card reveal">
+        <h3>Aligned with HiPC 2026</h3>
+        <ul>
+          <li><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>HPC &amp; AI convergence</b> — scalable FL for scientific computing</span></li>
+          <li><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Cloud &amp; distributed HPC</b> — federated orchestration across environments</span></li>
+          <li><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Performance &amp; benchmarking</b> for distributed AI workflows</span></li>
+          <li><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Algorithms for scientific computing</b> in multi-institution settings</span></li>
+          <li><svg class="tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span><b>Sustainable HPC</b> — communication-efficient, privacy-enabled training</span></li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TOPICS ============================ -->
+<section class="section topics" id="topics">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Call for papers</span>
+      <h2>Topics of interest</h2>
+      <p>We welcome original research across the federated-HPC stack. Topics include, but are not limited to, the following six areas.</p>
+    </div>
+
+    <div class="topic-grid">
+      <article class="topic reveal">
+        <span class="topic__tag">Orchestration</span>
+        <h3>Scalable &amp; orchestrated FL on HPC</h3>
+        <ul>
+          <li>FL orchestration on multi-cluster HPC environments</li>
+          <li>Integration with HPC schedulers and job managers</li>
+          <li>Multi-tier FL across data centres, clusters &amp; the edge continuum</li>
+          <li>GPU- and accelerator-aware federated training pipelines</li>
+          <li>Containerised, reproducible FL</li>
+        </ul>
+      </article>
+
+      <article class="topic reveal">
+        <span class="topic__tag">Trust</span>
+        <h3>Privacy, security &amp; trust</h3>
+        <ul>
+          <li>Differential privacy, secure aggregation, homomorphic encryption, MPC</li>
+          <li>Trusted execution environments &amp; confidential computing</li>
+          <li>Robustness against Byzantine, poisoning &amp; backdoor attacks</li>
+          <li>Membership, attribute &amp; inference attacks and defences</li>
+        </ul>
+      </article>
+
+      <article class="topic reveal">
+        <span class="topic__tag">Resilience</span>
+        <h3>Heterogeneity, scheduling &amp; resilience</h3>
+        <ul>
+          <li>Handling non-IID data and system heterogeneity</li>
+          <li>Resource-aware scheduling &amp; load balancing for federated workloads</li>
+          <li>Fault tolerance in long-running federated HPC jobs</li>
+          <li>Energy-efficient and sustainable FL training on HPC</li>
+        </ul>
+      </article>
+
+      <article class="topic reveal">
+        <span class="topic__tag">Applications</span>
+        <h3>Scientific applications &amp; domains</h3>
+        <ul>
+          <li>FL for healthcare &amp; medical imaging, genomics, climate, materials, physics, remote sensing</li>
+          <li>Federated digital twins &amp; simulation–ML coupling</li>
+          <li>Cross-facility, multi-institution scientific data collaboration</li>
+          <li>Federated foundation models / LLMs for science</li>
+        </ul>
+      </article>
+
+      <article class="topic reveal">
+        <span class="topic__tag">Reproducibility</span>
+        <h3>Algorithms, benchmarking &amp; reproducibility</h3>
+        <ul>
+          <li>Optimisation &amp; convergence for distributed/federated scientific computing</li>
+          <li>Personalised, multi-task &amp; federated analytics for scientific workflows</li>
+          <li>Performance characterisation &amp; benchmarking of FL on HPC</li>
+          <li>Datasets, benchmarks &amp; artifact evaluation for reproducible federated HPC</li>
+        </ul>
+      </article>
+
+      <article class="topic reveal">
+        <span class="topic__tag">Frontiers</span>
+        <h3>Emerging directions</h3>
+        <ul>
+          <li>Cloud-native, serverless &amp; cross-cloud federation for scientific HPC</li>
+          <li>Quantum-assisted &amp; quantum federated learning</li>
+          <li>Edge-to-exascale federated intelligence</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SUBMISSION ============================ -->
+<section class="section" id="submission">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Submit your work</span>
+      <h2>Submission &amp; review</h2>
+      <p>Early work-in-progress is encouraged alongside full papers — bring it to a forum of leading researchers in the field and build new collaborations.</p>
+    </div>
+
+    <div class="submit__grid">
+      <div class="spec-list reveal">
+        <div class="spec">
+          <div class="spec__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></div>
+          <div><h3>Paper format</h3><p>Up to <strong>6 pages, double-column IEEE format</strong> (as per the conference), including references, appendix and everything.</p></div>
+        </div>
+        <div class="spec">
+          <div class="spec__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+          <div><h3>Rigorous review</h3><p>Each paper receives <strong>three reviews</strong>. LLM-generated reviews are discouraged, and authors will be asked to address any such concerns if reported.</p></div>
+        </div>
+        <div class="spec">
+          <div class="spec__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          <div><h3>Artifact evaluation</h3><p>An <strong>artifact evaluation</strong> accompanies the review process to ensure reproducibility of accepted results.</p></div>
+        </div>
+        <div class="spec">
+          <div class="spec__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div><h3>Meet &amp; collaborate</h3><p>Present in one place, interact with invited speakers, and pave the way for stronger research collaborations.</p></div>
+        </div>
+      </div>
+
+      <!-- EDIT SUBMISSION LINK HERE -->
+      <div class="submit-cta reveal">
+        <span class="eyebrow">Ready when submissions open</span>
+        <h3>Submit via Linklings</h3>
+        <p>The submission site opens by <strong style="color:#fff;">September 1, 2026</strong>. Full papers are due <strong style="color:#fff;">October 9, 2026</strong>.</p>
+        <a class="btn btn--primary" href="#" id="submitLink">Go to submission site <span class="arrow" aria-hidden="true">↗</span></a>
+        <p class="fineprint">Replace <code>#</code> in the code with your Linklings URL once it is live.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SPEAKERS ============================ -->
+<section class="section speakers" id="speakers">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Invited talks · tentative</span>
+      <h2>Keynote &amp; invited speakers</h2>
+      <p>Experts from academia and industry sharing perspectives on federated and high-performance scientific computing.</p>
+    </div>
+
+    <div class="speaker-grid">
+      <div class="speaker reveal">
+        <div class="avatar">ST</div>
+        <div>
+          <div class="speaker__name">Dr. Somanath Tripathy</div>
+          <div class="speaker__role">Professor, Dept. of CSE</div>
+          <div class="speaker__org">IIT Patna, India</div>
+        </div>
+      </div>
+      <div class="speaker reveal">
+        <div class="avatar">TP</div>
+        <div>
+          <div class="speaker__name">Dr. T. V. Prabhakar</div>
+          <div class="speaker__role">Chief Research Scientist, Division of EECS</div>
+          <div class="speaker__org">IISc Bengaluru, India</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ORGANIZERS ============================ -->
+<section class="section" id="organizers">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Who's organising</span>
+      <h2>Organisers</h2>
+    </div>
+
+    <div class="org-lab reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M9 8h1M9 12h1M9 16h1M14 8h1M14 12h1M14 16h1"/><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+      High-Performance &amp; Trustworthy AI Systems Lab · Dept. of CSE, IIT (BHU) Varanasi, India
+    </div>
+
+    <div class="org-grid">
+      <article class="org reveal">
+        <div class="org__top">
+          <div class="avatar">HK</div>
+          <div>
+            <div class="org__name">Dr. Harsh Kasyap</div>
+            <div class="org__aff">Assistant Professor, CSE · IIT (BHU) Varanasi</div>
+          </div>
+        </div>
+        <p class="org__bio">Honorary research fellow at the University of Warwick, UK, and formerly a Research Associate at the <strong>Alan Turing Institute</strong>, London, where he built collaborations with HSBC, the Bank of Italy and TNO across data privacy, AI security and fairness. PhD from IIT Patna — thesis on security and privacy preserving techniques for federated learning. Interests: <strong>Federated Learning, ML Security, Trustworthy AI, Privacy &amp; Data Security</strong>.</p>
+      </article>
+
+      <article class="org reveal">
+        <div class="org__top">
+          <div class="avatar">RS</div>
+          <div>
+            <div class="org__name">Dr. Ravi Shankar Singh</div>
+            <div class="org__aff">Professor, CSE · IIT (BHU) Varanasi</div>
+          </div>
+        </div>
+        <p class="org__bio">Former Coordinator of the <strong>Supercomputing Center</strong> and In-charge of the HPC Lab in the Department of CSE at IIT (BHU). His work spans <strong>HPC infrastructures, scheduling and parallel algorithms</strong>, with numerous reputed publications, several sponsored projects, and many PhD and MTech theses supervised. He has organised multiple workshops on HPC and data engineering.</p>
+      </article>
+
+      <article class="org reveal">
+        <div class="org__top">
+          <div class="avatar">VC</div>
+          <div>
+            <div class="org__name">Mr. VVD Prasad Challuri</div>
+            <div class="org__aff">Assistant Professor · GVPCEW · Doctoral researcher, IIT (BHU) Varanasi</div>
+          </div>
+        </div>
+        <p class="org__bio">Over 8 years of academic experience plus 2 years in industry at HCL Technologies. His doctoral research at IIT (BHU) focuses on <strong>workflow scheduling and resource optimisation in Fog–Cloud environments</strong> — intelligent task offloading, resource allocation, service placement, and energy-efficient scheduling for distributed systems.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PROGRAM COMMITTEE ============================ -->
+<section class="section pc" id="committee">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Peer review</span>
+      <h2>Program committee</h2>
+      <p>Papers are reviewed by an international committee spanning academia and industry.</p>
+    </div>
+
+    <div class="pc-grid reveal">
+      <div class="pc-item"><span class="pc-num">01</span><div><div class="pc-name">Carsten Maple</div><div class="pc-org">University of Warwick, UK</div></div></div>
+      <div class="pc-item"><span class="pc-num">02</span><div><div class="pc-name">Somanath Tripathy</div><div class="pc-org">IIT Patna, India</div></div></div>
+      <div class="pc-item"><span class="pc-num">03</span><div><div class="pc-name">Anil Pradhan</div><div class="pc-org">Vaultree, Ireland</div></div></div>
+      <div class="pc-item"><span class="pc-num">04</span><div><div class="pc-name">Susil Kumar Mohanty</div><div class="pc-org">IIT Jodhpur, India</div></div></div>
+      <div class="pc-item"><span class="pc-num">05</span><div><div class="pc-name">Narendra Singh</div><div class="pc-org">SRM University, Vijayawada, India</div></div></div>
+      <div class="pc-item"><span class="pc-num">06</span><div><div class="pc-name">Ugur Atmaca</div><div class="pc-org">University of Warwick, UK</div></div></div>
+      <div class="pc-item"><span class="pc-num">07</span><div><div class="pc-name">Minghong Fang</div><div class="pc-org">University of Louisville, USA</div></div></div>
+      <div class="pc-item"><span class="pc-num">08</span><div><div class="pc-name">Dharmendra Prasad Mahato</div><div class="pc-org">NIT Hamirpur, India</div></div></div>
+      <div class="pc-item"><span class="pc-num">09</span><div><div class="pc-name">Medara Rambabu</div><div class="pc-org">GITAM University, Visakhapatnam, India</div></div></div>
+      <div class="pc-item"><span class="pc-num">10</span><div><div class="pc-name">Shweta Kushwaha</div><div class="pc-org">Galgotias College of Engineering &amp; Technology, India</div></div></div>
+      <div class="pc-item"><span class="pc-num">11</span><div><div class="pc-name">Swati Gupta</div><div class="pc-org">The NorthCap University, India</div></div></div>
+      <div class="pc-item"><span class="pc-num">12</span><div><div class="pc-name">Shri Prakash Dwivedi</div><div class="pc-org">G. B. Pant University, Pantnagar, India</div></div></div>
+      <div class="pc-item"><span class="pc-num">13</span><div><div class="pc-name">Mahender Kumar</div><div class="pc-org">WMG, University of Warwick, UK</div></div></div>
+      <div class="pc-item"><span class="pc-num">14</span><div><div class="pc-name">Ruby Rani</div><div class="pc-org">Newcastle University, UK</div></div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div>
+        <div class="footer__brand">
+          <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="7" fill="#0F1A3D"/>
+            <g fill="none" stroke="#14BEC9" stroke-width="1.6"><line x1="16" y1="16" x2="16" y2="6"/><line x1="16" y1="16" x2="24.5" y2="11"/><line x1="16" y1="16" x2="24.5" y2="21"/><line x1="16" y1="16" x2="16" y2="26"/><line x1="16" y1="16" x2="7.5" y2="21"/><line x1="16" y1="16" x2="7.5" y2="11"/></g>
+            <g fill="#14BEC9"><circle cx="16" cy="6" r="2.2"/><circle cx="24.5" cy="11" r="2.2"/><circle cx="24.5" cy="21" r="2.2"/><circle cx="16" cy="26" r="2.2"/><circle cx="7.5" cy="21" r="2.2"/><circle cx="7.5" cy="11" r="2.2"/></g>
+            <circle cx="16" cy="16" r="3.4" fill="#F3F5FB"/>
+          </svg>
+          Federated HPC 2026
+        </div>
+        <p class="footer__desc">Privacy-preserving and collaborative high-performance scientific computing. A half-day workshop held in conjunction with HiPC 2026.</p>
+      </div>
+
+      <div class="footer__col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#dates">Key dates</a></li>
+          <li><a href="#topics">Topics of interest</a></li>
+          <li><a href="#submission">Submission &amp; review</a></li>
+          <li><a href="#committee">Program committee</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4>Contact</h4>
+        <div class="footer__contact">
+          High-Performance &amp; Trustworthy AI Systems Lab<br/>
+          Dept. of CSE, IIT (BHU) Varanasi, India<br/>
+          <!-- EDIT CONTACT EMAIL + HiPC LINK HERE -->
+          <a href="mailto:workshop@example.com">workshop@example.com</a><br/>
+          <a href="https://hipc.org" target="_blank" rel="noopener">hipc.org ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>© <span id="year">2026</span> Federated HPC Workshop · IIT (BHU) Varanasi</span>
+      <span>In conjunction with HiPC 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- current year ---------- */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- nav: shadow on scroll ---------- */
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+onScroll();
+window.addEventListener('scroll', onScroll, {passive:true});
+
+/* ---------- mobile menu toggle ---------- */
+const toggle = document.getElementById('navToggle');
+const links = document.getElementById('navLinks');
+toggle.addEventListener('click', () => {
+  const open = links.classList.toggle('open');
+  toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+links.querySelectorAll('a').forEach(a =>
+  a.addEventListener('click', () => {
+    links.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+  })
+);
+
+/* ---------- scroll reveal ---------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ---------- active section in nav ---------- */
+const navMap = {};
+document.querySelectorAll('.nav__links a[href^="#"]').forEach(a => {
+  const id = a.getAttribute('href').slice(1);
+  if (id) navMap[id] = a;
+});
+const sections = Object.keys(navMap).map(id => document.getElementById(id)).filter(Boolean);
+const spy = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting){
+      Object.values(navMap).forEach(a => a.classList.remove('active'));
+      const a = navMap[e.target.id];
+      if (a) a.classList.add('active');
+    }
+  });
+}, {rootMargin:'-45% 0px -50% 0px'});
+sections.forEach(s => spy.observe(s));
+</script>
+</body>
+</html>
