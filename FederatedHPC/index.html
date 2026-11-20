@@ -139,6 +139,7 @@ ul{margin:0;padding:0;list-style:none;}
 .tl-item:last-child{border-bottom:1px solid var(--ink-line);}
 .tl-date{font-family:var(--font-mono);font-size:1rem;font-weight:500;color:var(--signal-2);letter-spacing:.01em;display:flex;align-items:center;gap:.7rem;}
 .tl-date .marker{width:9px;height:9px;border-radius:50%;background:var(--signal);flex:none;box-shadow:0 0 0 4px rgba(20,190,201,.16);}
+.tl-date .date-past{text-decoration:line-through;text-decoration-color:#F06A6A;text-decoration-thickness:2px;color:var(--muted-dark);}
 .tl-body{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .8rem;}
 .tl-title{font-family:var(--font-display);font-weight:500;font-size:1.12rem;color:#fff;letter-spacing:-.01em;}
 .tl-sub{font-size:.92rem;color:var(--muted-dark);}
@@ -175,6 +176,16 @@ ul{margin:0;padding:0;list-style:none;}
 .submit-cta .btn{margin-top:1.4rem;position:relative;}
 .submit-cta .fineprint{font-family:var(--font-mono);font-size:.72rem;color:var(--faint-dark);margin-top:1.1rem;position:relative;letter-spacing:.02em;}
 @media (max-width:780px){.submit__grid{grid-template-columns:1fr;}}
+
+/* ACCEPTED PAPERS */
+.accepted{background:var(--surface-2);border-block:1px solid var(--line);}
+.accepted-grid{display:grid;grid-template-columns:1fr;gap:1rem;}
+.paper{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.35rem 1.5rem;box-shadow:var(--shadow-sm);}
+.paper__top{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .8rem;margin-bottom:.65rem;}
+.paper__id{font-family:var(--font-mono);font-size:.72rem;font-weight:600;color:var(--signal-ink);background:var(--signal-soft);border:1px solid var(--signal-line);border-radius:6px;padding:.2rem .5rem;}
+.paper h3{font-size:1.08rem;line-height:1.3;color:var(--text);}
+.paper__authors{font-size:.91rem;color:var(--muted);line-height:1.55;margin-top:.55rem;}
+@media (max-width:620px){.paper{padding:1.1rem;}}
 
 /* SPEAKERS */
 .speakers{background:var(--surface-2);border-block:1px solid var(--line);}
@@ -294,6 +305,7 @@ a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2.5px solid var(
       <a href="#dates">Dates</a>
       <a href="#topics">Topics</a>
       <a href="#submission">Submission</a>
+      <a href="#accepted">Accepted papers</a>
       <a href="#speakers">Speakers</a>
       <a href="#organizers">Organizers</a>
       <a href="#committee">Committee</a>
@@ -380,20 +392,11 @@ a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2.5px solid var(
       </div>
     </div>
     <div class="timeline reveal">
-      <div class="tl-item"><div class="tl-date"><span class="marker"></span>Sep 1</div><div class="tl-body"><span class="tl-title">Submission site opens</span></div></div>
-      <div class="tl-item">
-  <div class="tl-date">
-    <span class="marker"></span>
-    <span style="text-decoration: line-through; text-decoration-color: red; text-decoration-thickness: 2px;">Oct 4</span>
-    <span style="color: red; font-weight: bold; margin-left: 8px;">Oct 9</span>
-  </div>
-  <div class="tl-body">
-    <span class="tl-title">Full paper submissions due</span>
-  </div>
-</div>
-      <div class="tl-item"><div class="tl-date"><span class="marker"></span>Nov 1</div><div class="tl-body"><span class="tl-title">Author notifications</span></div></div>
-      <div class="tl-item"><div class="tl-date"><span class="marker"></span>Nov 9</div><div class="tl-body"><span class="tl-title">Camera-ready version due</span></div></div>
-      <div class="tl-item"><div class="tl-date"><span class="marker"></span>Dec 16</div><div class="tl-body"><span class="tl-title">Save the date for workshop </span></div></div>
+      <div class="tl-item"><div class="tl-date"><span class="marker"></span><span class="date-past">Sep 1</span></div><div class="tl-body"><span class="tl-title">Submission site opens</span></div></div>
+      <div class="tl-item"><div class="tl-date"><span class="marker"></span><span class="date-past">Oct 4</span><span class="date-past">Oct 9</span></div><div class="tl-body"><span class="tl-title">Full paper submissions due</span></div></div>
+      <div class="tl-item"><div class="tl-date"><span class="marker"></span><span class="date-past">Nov 1</span></div><div class="tl-body"><span class="tl-title">Author notifications</span></div></div>
+      <div class="tl-item"><div class="tl-date"><span class="marker"></span><span class="date-past">Nov 9</span></div><div class="tl-body"><span class="tl-title">Camera-ready version due</span></div></div>
+      <div class="tl-item"><div class="tl-date"><span class="marker"></span>Dec 16</div><div class="tl-body"><span class="tl-title">Save the date for workshop</span></div></div>
     </div>
   </div>
 </section>
@@ -445,9 +448,52 @@ a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2.5px solid var(
       <div class="submit-cta reveal">
         <span class="eyebrow">Ready when submissions open</span>
         <h3>Submit via Linklings</h3>
-        <p>The submission site opens by <strong style="color:#fff;">September 1, 2026</strong>. Full papers are due <strong style="color:#fff;"><span style="text-decoration: line-through; text-decoration-color: red; text-decoration-thickness: 2px;">October 4, 2026</span> October 9, 2026</strong>.</p>
+        <p>The submission site opened on <strong style="color:#fff;"><span class="date-past">September 1, 2026</span></strong>. Full papers were due <strong style="color:#fff;"><span class="date-past">October 4, 2026</span> <span class="date-past">October 9, 2026</span></strong>.</p>
         <a class="btn btn--primary" href="https://ssl.linklings.net/conferences/HiPC/" target="_blank" id="submitLink">Go to submission site <span class="arrow" aria-hidden="true">↗</span></a>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ACCEPTED PAPERS ============================ -->
+<section class="section accepted" id="accepted">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Workshop programme</span>
+      <h2>Accepted papers</h2>
+      <p>We are pleased to announce the following accepted papers for Federated HPC 2026.</p>
+    </div>
+    <div class="accepted-grid">
+      <article class="paper reveal">
+        <div class="paper__top"><span class="paper__id">ws_fhpc103</span></div>
+        <h3>AMMO: An Adaptive, Predictive Multi-Fabric Memory Orchestrator for DRAM, CXL, and Fabric-Attached Memory in HPC Clusters</h3>
+        <p class="paper__authors">Navin Mani Upadhyay (UPES, Dehradun, India); Vani Malagar (Model Institute of Engineering and Technology, Jammu, India); Vinod Kumar (UPES, Dehradun, India); Rahul Pandey (UPES, Dehradun, India).</p>
+      </article>
+      <article class="paper reveal">
+        <div class="paper__top"><span class="paper__id">ws_fhpc111</span></div>
+        <h3>HYDRA-FL: Hypernet-Driven Aggregation for Resilient Federated Learning in Band Heterogeneous Environments</h3>
+        <p class="paper__authors">Krish Didwania (Manipal Institute of Technology, India); Aditya Kasliwal (Manipal Institute of Technology, India); Ishaan Gakhar (Manipal Institute of Technology, India); Annappa B (National Institute of Technology Karnataka, India); Sachin D N (Indian Institute of Information Technology Bhopal, India).</p>
+      </article>
+      <article class="paper reveal">
+        <div class="paper__top"><span class="paper__id">ws_fhpc114</span></div>
+        <h3>Federated Link Prediction in a Collaborative Multi-organization Graph Learning System</h3>
+        <p class="paper__authors">Miyuru Dayarathna (University of Moratuwa, LSEG, Sri Lanka); Damitha Senevirathne (University of Moratuwa, Sri Lanka); Isuru Wijesiri (University of Moratuwa, Sri Lanka); Suchitha Dehigaspitiya (University of Moratuwa, Sri Lanka); Sanath Jayasena (University of Moratuwa, Sri Lanka); Toyotaro Suzumura (The University of Tokyo, Japan).</p>
+      </article>
+      <article class="paper reveal">
+        <div class="paper__top"><span class="paper__id">ws_fhpc106</span></div>
+        <h3>S<sup>4</sup>LDBO: A Stochastic Snapshot Single-Loop Algorithm for Decentralized Bilevel Optimization</h3>
+        <p class="paper__authors">Aryan Nandal (National Institute of Technology Hamirpur, India); Dharmendra Prasad Mahato (National Institute of Technology Hamirpur, India).</p>
+      </article>
+      <article class="paper reveal">
+        <div class="paper__top"><span class="paper__id">ws_fhpc107</span></div>
+        <h3>AgriFedChain: HPC-Orchestrated Edge Federated Learning for Byzantine-Robust and Blockchain-Audited Maize Disease Diagnosis</h3>
+        <p class="paper__authors">Divyansh Pandey (Madan Mohan Malaviya University of Technology, Gorakhpur, India); Lokendra Singh Umrao (Madan Mohan Malaviya University of Technology, Gorakhpur, India).</p>
+      </article>
+      <article class="paper reveal">
+        <div class="paper__top"><span class="paper__id">ws_fhpc110</span></div>
+        <h3>Formal verification of binary tree based archival of atomic snapshots</h3>
+        <p class="paper__authors">Lade Ritish Rishi (National Institute of Technology Hamirpur, India); Mohammad Azeem (National Institute of Technology Hamirpur, India); Dharmendra Prasad Mahato (National Institute of Technology Hamirpur, India).</p>
+      </article>
     </div>
   </div>
 </section>
@@ -585,6 +631,7 @@ a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2.5px solid var(
           <li><a href="#dates">Important dates</a></li>
           <li><a href="#topics">Topics of interest</a></li>
           <li><a href="#submission">Submission &amp; review</a></li>
+          <li><a href="#accepted">Accepted papers</a></li>
           <li><a href="#committee">Program committee</a></li>
           <li><a href="https://ssl.linklings.net/conferences/HiPC/" target="_blank">Submission Link</a></li>
         </ul>
