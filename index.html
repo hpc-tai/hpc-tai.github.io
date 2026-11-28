@@ -260,6 +260,33 @@ ul{margin:0;padding:0;list-style:none;}
 }
 a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2.5px solid var(--signal);outline-offset:3px;border-radius:6px;}
 .hero a:focus-visible,.dates a:focus-visible,.pc a:focus-visible{outline-color:var(--signal-2);}
+
+/* FULL PROGRAMME */
+.programme{background:var(--surface-2);border-block:1px solid var(--line);}
+.programme__meta{display:flex;flex-wrap:wrap;gap:.65rem;margin:-.5rem 0 1.5rem;}
+.programme__meta span{display:flex;gap:.45rem;align-items:center;padding:.55rem .8rem;background:var(--surface);border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:.84rem;}
+.programme__meta strong{font-family:var(--font-mono);font-size:.78rem;color:var(--signal-ink);}
+.programme__session{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(1.1rem,3vw,1.8rem);margin-top:1rem;box-shadow:var(--shadow-sm);}
+.programme__session-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.8rem 1.2rem;padding-bottom:1.15rem;border-bottom:1px solid var(--line);}
+.programme__kicker,.programme__type{font-family:var(--font-mono);font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--signal-ink);}
+.programme__session-head h3{font-size:clamp(1.15rem,1rem + .8vw,1.45rem);margin-top:.45rem;color:var(--text);}
+.programme__chair{font-size:.78rem;color:var(--muted);background:var(--signal-soft);padding:.3rem .6rem;border-radius:6px;}
+.programme__item{display:grid;grid-template-columns:135px 1fr;gap:1rem;padding:1.05rem 0;border-bottom:1px solid var(--line);align-items:start;}
+.programme__item:last-child{border-bottom:0;padding-bottom:.2rem;}
+.programme__item time,.programme__break time{font-family:var(--font-mono);font-size:.83rem;font-weight:600;color:var(--signal-ink);padding-top:.1rem;white-space:nowrap;}
+.programme__item h4{font-family:var(--font-body);font-size:1rem;font-weight:600;line-height:1.4;color:var(--text);margin:.25rem 0;}
+.programme__item p{font-size:.88rem;color:var(--muted);line-height:1.5;margin-top:.25rem;}
+.programme__item .programme__speaker{color:var(--signal-ink);font-weight:500;}
+.programme__keynote{background:linear-gradient(90deg,var(--signal-soft),transparent 80%);margin-inline:-.6rem;padding-inline:.6rem;border-radius:8px;}
+.programme__break{display:grid;grid-template-columns:135px 1fr;gap:1rem;align-items:center;margin:1rem 0;padding:1rem 1.2rem;background:var(--ink);border-radius:var(--radius-sm);color:#fff;}
+.programme__break time{color:var(--signal-2);}
+.programme__break strong{display:block;font-family:var(--font-display);font-size:1rem;}
+.programme__break span{display:block;font-size:.85rem;color:var(--muted-dark);margin-top:.1rem;}
+.programme__discussion{background:rgba(242,166,59,.09);margin:0 -.6rem;padding-inline:.6rem;border-radius:8px;}
+.programme__discussion .programme__type{color:#9A6415;}
+.programme__note{font-size:.82rem;color:var(--muted);margin-top:1rem;}
+@media(max-width:620px){.programme__item,.programme__break{grid-template-columns:1fr;gap:.35rem;}.programme__item{padding:.9rem 0;}.programme__meta{display:grid;}.programme__meta span{justify-content:flex-start;}}
+
 </style>
 </head>
 
@@ -516,12 +543,118 @@ a:focus-visible,.btn:focus-visible,button:focus-visible{outline:2.5px solid var(
 </section>
 
 <!-- ============================ FULL PROGRAMME ============================ -->
-<section class="section" id="programme">
+<section class="section programme" id="programme">
   <div class="container">
     <div class="section-head reveal">
+      <span class="eyebrow">December 16, 2026 · HiPC 2026</span>
       <h2>Full Programme</h2>
-      <p>To be announced soon.</p>
+      <p>The workshop features two keynote sessions and six accepted paper presentations. Each paper presentation is scheduled for 15 minutes.</p>
     </div>
+
+    <div class="programme__meta reveal">
+      <span><strong>14:00–15:30</strong> Session I</span>
+      <span><strong>15:30–16:00</strong> Tea / Coffee Break</span>
+      <span><strong>16:00–18:00</strong> Session II</span>
+    </div>
+
+    <div class="programme__session reveal">
+      <div class="programme__session-head">
+        <div>
+          <span class="programme__kicker">Session I · 14:00–15:30</span>
+          <h3>Federated Learning: Methods, Resilience &amp; Applications</h3>
+        </div>
+        <span class="programme__chair">Keynote + 3 paper presentations</span>
+      </div>
+      <div class="programme__item programme__keynote">
+        <time>14:00–14:45</time>
+        <div>
+          <span class="programme__type">Keynote 1 · 45 minutes</span>
+          <h4>Federated Learning - exact topic to be announced</h4>
+          <p class="programme__speaker">Prabhakar Venkata, Chief Research Scientist, Department of Electronic Systems Engineering, Indian Institute of Science, Bangalore, India</p>
+        </div>
+      </div>
+      <div class="programme__item">
+        <time>14:45–15:00</time>
+        <div>
+          <span class="programme__type">Paper presentation · 15 minutes</span>
+          <h4>HYDRA-FL: Hypernet-Driven Aggregation for Resilient Federated Learning in Band Heterogeneous Environments</h4>
+          <p>Krish Didwania, Aditya Kasliwal, Ishaan Gakhar, Annappa B, and Sachin D N</p>
+        </div>
+      </div>
+      <div class="programme__item">
+        <time>15:00–15:15</time>
+        <div>
+          <span class="programme__type">Paper presentation · 15 minutes</span>
+          <h4>Federated Link Prediction in a Collaborative Multi-organization Graph Learning System</h4>
+          <p>Miyuru Dayarathna, Damitha Senevirathne, Isuru Wijesiri, Suchitha Dehigaspitiya, Sanath Jayasena, and Toyotaro Suzumura</p>
+        </div>
+      </div>
+      <div class="programme__item">
+        <time>15:15–15:30</time>
+        <div>
+          <span class="programme__type">Paper presentation · 15 minutes</span>
+          <h4>AgriFedChain: HPC-Orchestrated Edge Federated Learning for Byzantine-Robust and Blockchain-Audited Maize Disease Diagnosis</h4>
+          <p>Divyansh Pandey and Lokendra Singh Umrao</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="programme__break reveal">
+      <time>15:30–16:00</time>
+      <div><strong>Tea / Coffee Break</strong><span>Networking and refreshments</span></div>
+    </div>
+
+    <div class="programme__session reveal">
+      <div class="programme__session-head">
+        <div>
+          <span class="programme__kicker">Session II · 16:00–18:00</span>
+          <h3>High-Performance &amp; Distributed Computing</h3>
+        </div>
+        <span class="programme__chair">Keynote + 3 paper presentations + discussion</span>
+      </div>
+      <div class="programme__item programme__keynote">
+        <time>16:00–16:45</time>
+        <div>
+          <span class="programme__type">Keynote 2 · 45 minutes</span>
+          <h4>Emerging Trends in High-Performance and Distributed Computing - exact topic to be announced</h4>
+          <p class="programme__speaker">Nilotpal Chakraborty Assistant Professor Department of Computer Science and Engineering, Indian Institute of Information Technology Guwahati, India</p>
+        </div>
+      </div>
+      <div class="programme__item">
+        <time>16:45–17:00</time>
+        <div>
+          <span class="programme__type">Paper presentation · 15 minutes</span>
+          <h4>AMMO: An Adaptive, Predictive Multi-Fabric Memory Orchestrator for DRAM, CXL, and Fabric-Attached Memory in HPC Clusters</h4>
+          <p>Navin Mani Upadhyay, Vani Malagar, Vinod Kumar, and Rahul Pandey</p>
+        </div>
+      </div>
+      <div class="programme__item">
+        <time>17:00–17:15</time>
+        <div>
+          <span class="programme__type">Paper presentation · 15 minutes</span>
+          <h4>S<sup>4</sup>LDBO: A Stochastic Snapshot Single-Loop Algorithm for Decentralized Bilevel Optimization</h4>
+          <p>Aryan Nandal and Dharmendra Prasad Mahato</p>
+        </div>
+      </div>
+      <div class="programme__item">
+        <time>17:15–17:30</time>
+        <div>
+          <span class="programme__type">Paper presentation · 15 minutes</span>
+          <h4>Formal verification of binary tree based archival of atomic snapshots</h4>
+          <p>Lade Ritish Rishi, Mohammad Azeem, and Dharmendra Prasad Mahato</p>
+        </div>
+      </div>
+      <div class="programme__item programme__discussion">
+        <time>17:30–18:00</time>
+        <div>
+          <span class="programme__type">Closing session · 30 minutes</span>
+          <h4>Open Discussion, Q&amp;A and Workshop Closing</h4>
+          <p>Discussion of key insights, future directions, and opportunities for collaboration.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="programme__note">Note: Keynote speaker details will be updated once confirmed.</p>
   </div>
 </section>
 
